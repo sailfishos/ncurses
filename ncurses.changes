@@ -1,0 +1,23 @@
+* Sun Jun 05 2011 Anas Nashif <anas.nashif@intel.com> - 5.7
+- Repackage documentation
+
+* Wed May 05 2010 Anas Nashif <anas.nashif@intel.com> - 5.7
+- Fixed rpmlint errors
+
+* Wed Mar 03 2010 Anas Nashif <anas.nashif@intel.com> - 5.7
+- Fixed package cross dependencies
+
+* Fri Jan 29 2010 Jian-feng Ding <jian-feng.ding@intel.com> 5.7
+- Enable spectacle, and update source download url
+
+* Sat Aug 22 2009 Anas Nashif <anas.nashif@intel.com> - 5.7
+- Update to 5.7
+
+* Sun Mar 15 2009 Anas Nashif <anas.nashif@intel.com> 5.6
+- fixed prereq
+
+* Tue Jan 13 2009 Anas Nashif <anas.nashif@intel.com> 5.6
+- Update to patch 20080927
+
+* Fri Dec 05 2008 Arjan van de Ven <arjan@linux.intel.com> 5.6
+- Remove some stale obsoletes
