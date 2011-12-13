@@ -1,7 +1,7 @@
 Name: ncurses
 Summary: Ncurses support utilities
-Version: 5.7
-Release: 3.20090207
+Version: 5.9
+Release: 1
 Group: System/Base
 RpmLintIgnore:
     - "ncurses-static.* files-duplicated-waste"
@@ -9,12 +9,6 @@ License: MIT
 URL: http://invisible-island.net/ncurses/ncurses.html
 Sources:
     - http://ftp.gnu.org/pub/gnu/ncurses/ncurses-%{version}.tar.gz
-Patches:
-    - ncurses-5.7-20081115-20090207.patch.bz2
-    - ncurses-5.7-20090124-config.patch
-    - ncurses-5.6-20070612-libs.patch
-    - ncurses-5.6-20080112-urxvt.patch
-    - ncurses-5.6-20080628-kbs.patch
 Description: |
     The curses library routines are a terminal-independent method of
     updating character screens with reasonable optimization.  The ncurses
@@ -28,7 +22,7 @@ Description: |
 AutoDepend: no
 PkgBR:
     - pkgconfig
-Builder: no-builder
+Builder: none
 SubPackages:
     - Name: libs
       Summary: Ncurses libraries
