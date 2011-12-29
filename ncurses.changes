@@ -1,3 +1,7 @@
+* Thu Dec 29 2011 Carsten Munk <carsten.munk@gmail.com> - 5.9
+- Add patch to make ncurses linking always pull in tinfo, MER#63,
+  reported by cxl000
+
 * Tue Dec 13 2011 Carsten Munk <carsten.munk@gmail.com> - 5.9
 - Upgrade to 5.9
 

@@ -226,6 +226,13 @@ echo "INPUT(-lncursesw)" > $RPM_BUILD_ROOT%{_libdir}/libcursesw.so
 
 echo "INPUT(-ltinfo)" > $RPM_BUILD_ROOT%{_libdir}/libtermcap.so
 
+# don't require -ltinfo when linking with --no-add-needed
+for l in $RPM_BUILD_ROOT%{_libdir}/libncurses{,w}.so; do
+    soname=$(basename $(readlink $l))
+    rm -f $l
+    echo "INPUT($soname -ltinfo)" > $l
+done
+
 rm -f $RPM_BUILD_ROOT%{_libdir}/terminfo
 rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 # << install post
