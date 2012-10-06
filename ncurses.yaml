@@ -19,10 +19,9 @@ Description: |
     tic, a decompiler infocmp, clear, tput, tset, and a termcap conversion
     tool captoinfo.
 
-AutoDepend: no
-PkgBR:
-    - pkgconfig
 Builder: none
+Configure: none
+
 SubPackages:
     - Name: libs
       Summary: Ncurses libraries
