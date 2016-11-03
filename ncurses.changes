@@ -1,3 +1,6 @@
+* Mon Nov 21 2016 Andrew Branson <andrew.branson@jollamobile.com> - 6.0-2
+- [update] Update to upstream 6.0 (building ABI v5) for aarch64 support. Contributes JB#36790
+
 * Mon Nov 21 2016 Andrew Branson <andrew.branson@jollamobile.com> - 6.0
 - [update] Update to upstream 6.0 for aarch64 support. Contributes JB#36790
 
