@@ -1,3 +1,6 @@
+* Mon Nov 21 2016 Andrew Branson <andrew.branson@jollamobile.com> - 6.0
+- [update] Update to upstream 6.0 for aarch64 support. Contributes JB#36790
+
 * Sat Oct 06 2012 Marko Saukko <marko.saukko@jollamobile.com> - 5.9
 - Contributing to MER#174, by moving libs to /usr/lib
 

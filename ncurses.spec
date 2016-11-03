@@ -10,15 +10,13 @@ Name:       ncurses
 %define keepstatic 1
 
 Summary:    Ncurses support utilities
-Version:    5.9
+Version:    6.0
 Release:    1
 Group:      System/Base
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
 Source0:    http://ftp.gnu.org/pub/gnu/ncurses/ncurses-%{version}.tar.gz
-Source100:  ncurses.yaml
 Source101:  ncurses-rpmlintrc
-Patch0:     ncurses-aarch64.patch
 
 %description
 The curses library routines are a terminal-independent method of
@@ -96,7 +94,6 @@ which will use ncurses.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1
 # >> setup
 %docs_package
 # << setup
