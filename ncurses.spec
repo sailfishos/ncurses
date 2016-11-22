@@ -106,6 +106,7 @@ touch -r ${f}{,_} && mv -f ${f}{_,}
 done
 
 %define ncurses_options \\\
+--with-abi-version=5 \\\
 --with-shared --without-ada --with-ospeed=unsigned \\\
 --enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
 --with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo \\\
