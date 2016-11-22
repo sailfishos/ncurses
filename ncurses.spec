@@ -5,13 +5,11 @@
 
 Name:       ncurses
 
-# >> macros
-# << macros
 %define keepstatic 1
 
 Summary:    Ncurses support utilities
 Version:    6.0
-Release:    1
+Release:    2
 Group:      System/Base
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
@@ -94,12 +92,9 @@ which will use ncurses.
 
 %prep
 %setup -q -n %{name}-%{version}
-# >> setup
 %docs_package
-# << setup
 
 %build
-# >> build pre
 
 # this will be in documentation, drop executable bits
 cp -p install-sh test
@@ -109,11 +104,7 @@ for f in ANNOUNCE; do
 iconv -f iso8859-1 -t utf8 -o ${f}{_,} &&
 touch -r ${f}{,_} && mv -f ${f}{_,}
 done
-# << build pre
 
-
-
-# >> build post
 %define ncurses_options \\\
 --with-shared --without-ada --with-ospeed=unsigned \\\
 --enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
@@ -136,14 +127,10 @@ ln -s ../configure .
 %configure %{ncurses_options} --enable-widec --without-progs
 make %{?_smp_mflags} libs
 cd ..
-# << build post
 
 %install
 rm -rf %{buildroot}
-# >> install pre
-# << install pre
 
-# >> install post
 make -C narrowc DESTDIR=$RPM_BUILD_ROOT install.{libs,progs,data}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libtinfo.*
 make -C widec DESTDIR=$RPM_BUILD_ROOT install.{libs,includes,man}
@@ -202,7 +189,6 @@ done
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/terminfo
 rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
-# << install post
 
 
 %post libs -p /sbin/ldconfig
@@ -211,38 +197,27 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 
 %files
 %defattr(-,root,root,-)
-# >> files
 %{_bindir}/[cirt]*
-# << files
 
 %files libs
 %defattr(-,root,root,-)
-# >> files libs
 %{_libdir}/lib*.so.*
-# << files libs
 
 %files term -f terms.term
 %defattr(-,root,root,-)
-# >> files term
-# << files term
 
 %files base -f terms.base
 %defattr(-,root,root,-)
-# >> files base
 %dir %{_sysconfdir}/terminfo
 %{_datadir}/tabset
 %dir %{_datadir}/terminfo
-# << files base
 
 %files static
 %defattr(-,root,root,-)
-# >> files static
 %{_libdir}/lib*.a
-# << files static
 
 %files devel
 %defattr(-,root,root,-)
-# >> files devel
 %{_bindir}/ncurses*-config
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
@@ -251,4 +226,3 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 %{_includedir}/ncurses/*.h
 %{_includedir}/ncursesw/*.h
 %{_includedir}/*.h
-# << files devel
