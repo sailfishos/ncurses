@@ -3,13 +3,14 @@ Name:       ncurses
 %define keepstatic 1
 
 Summary:    Ncurses support utilities
-Version:    6.0
-Release:    3
+Version:    6.1+git1
+Release:    1
 Group:      System/Base
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
-Source0:    http://ftp.gnu.org/pub/gnu/ncurses/ncurses-%{version}.tar.gz
+Source0:    %{name}-6.1.tar.gz
 Source101:  ncurses-rpmlintrc
+Requires:   %{name}-libs
 
 %description
 The curses library routines are a terminal-independent method of
@@ -25,8 +26,7 @@ tool captoinfo.
 %package libs
 Summary:    Ncurses libraries
 Group:      System/Libraries
-Requires:   %{name} = %{version}-%{release}
-Requires:   ncurses-base = %{version}-%{release}
+Requires:   %{name}-base = %{version}-%{release}
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -42,8 +42,7 @@ This package contains the ncurses libraries.
 %package term
 Summary:    Terminal descriptions
 Group:      System/Base
-Requires:   %{name} = %{version}-%{release}
-Requires:   ncurses-base = %{version}-%{release}
+Requires:   %{name}-base = %{version}-%{release}
 
 %description term
 This package contains additional terminal descriptions not found in
@@ -53,8 +52,7 @@ the ncurses-base package.
 %package base
 Summary:    Descriptions of common terminals
 Group:      System/Base
-Requires:   %{name} = %{version}-%{release}
-Conflicts:   ncurses < 5.6-13
+Conflicts:   %{name} < 5.6-13
 
 %description base
 This package contains descriptions of common terminals. Other terminal
@@ -64,8 +62,7 @@ descriptions are included in the ncurses-term package.
 %package static
 Summary:    Static libraries for the ncurses library
 Group:      Development/Libraries
-Requires:   %{name} = %{version}-%{release}
-Requires:   ncurses-devel = %{version}-%{release}
+Requires:   %{name}-devel = %{version}-%{release}
 
 %description static
 The ncurses-static package includes static libraries of the ncurses library.
@@ -74,8 +71,7 @@ The ncurses-static package includes static libraries of the ncurses library.
 %package devel
 Summary:    Development files for the ncurses library
 Group:      Development/Libraries
-Requires:   %{name} = %{version}-%{release}
-Requires:   ncurses-libs = %{version}-%{release}
+Requires:   %{name}-libs = %{version}-%{release}
 
 %description devel
 The header files and libraries for developing applications that use
@@ -96,7 +92,7 @@ Man pages for %{name}.
 
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-6.1
 
 %build
 
@@ -155,21 +151,22 @@ konsole konsole-256color mach\* mlterm mrxvt nsterm putty\* pcansi \
 rxvt rxvt-\* screen screen-\* screen.\* sun teraterm teraterm2.3 \
 wsvt25\* xfce xterm xterm-\*
 do
-for i in $RPM_BUILD_ROOT%{_datadir}/terminfo/?/$termname; do
-for t in $(find $RPM_BUILD_ROOT%{_datadir}/terminfo -samefile $i); do
-baseterms="$baseterms $(basename $t)"
-done
-done
+    for i in $RPM_BUILD_ROOT%{_datadir}/terminfo/?/$termname; do
+        inum=$(ls -i $i | cut -d' ' -f1)
+        for t in $(find $RPM_BUILD_ROOT%{_datadir}/terminfo -inum $inum); do
+            baseterms="$baseterms $(basename $t)"
+        done
+    done
 done 2> /dev/null
 for t in $baseterms; do
-echo "%dir %{_datadir}/terminfo/${t::1}"
-echo %{_datadir}/terminfo/${t::1}/$t
+    echo "%dir %{_datadir}/terminfo/${t::1}"
+    echo %{_datadir}/terminfo/${t::1}/$t
 done 2> /dev/null | sort -u > terms.base
 find $RPM_BUILD_ROOT%{_datadir}/terminfo \! -type d | \
 sed "s|^$RPM_BUILD_ROOT||" | while read t
 do
-echo "%dir $(dirname $t)"
-echo $t
+    echo "%dir $(dirname $t)"
+    echo $t
 done 2> /dev/null | sort -u | comm -2 -3 - terms.base > terms.term
 
 # can't replace directory with symlink (rpm bug), symlink all headers
@@ -213,6 +210,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 
 %files base -f terms.base
 %defattr(-,root,root,-)
+%license COPYING
 %dir %{_sysconfdir}/terminfo
 %{_datadir}/tabset
 %dir %{_datadir}/terminfo
