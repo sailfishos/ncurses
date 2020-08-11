@@ -1,3 +1,6 @@
+* Tue Aug 11 2020 Matti Kosola <matti.kosola@jolla.com> - 6.1+git2
+- Provides console-tools. JB#48948
+
 * Tue Feb 26 2019 Tomi Leppänen <tomi.leppanen@jolla.com> - 6.1+git1
 - Update to ncurses 6.1. Fixes JB#44435
 

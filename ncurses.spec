@@ -3,7 +3,7 @@ Name:       ncurses
 %define keepstatic 1
 
 Summary:    Ncurses support utilities
-Version:    6.1+git1
+Version:    6.1+git2
 Release:    1
 Group:      System/Base
 License:    MIT
@@ -11,6 +11,8 @@ URL:        http://invisible-island.net/ncurses/ncurses.html
 Source0:    %{name}-6.1.tar.gz
 Source101:  ncurses-rpmlintrc
 Requires:   %{name}-libs
+Provides:   console-tools
+Obsoletes:  ncurses < 6.1+git2
 
 %description
 The curses library routines are a terminal-independent method of
