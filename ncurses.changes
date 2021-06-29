@@ -1,3 +1,6 @@
+* Wed Aug 25 2021 Björn Bidar <bjorn.bidar@jolla.com> - 6.1+git3
+- [ncurses] Drop ABI5. Fixes JB#55230
+
 * Tue Aug 11 2020 Matti Kosola <matti.kosola@jolla.com> - 6.1+git2
 - Provides console-tools. JB#48948
 

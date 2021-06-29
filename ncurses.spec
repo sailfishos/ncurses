@@ -3,7 +3,7 @@ Name:       ncurses
 %define keepstatic 1
 
 Summary:    Ncurses support utilities
-Version:    6.1+git2
+Version:    6.1+git3
 Release:    1
 Group:      System/Base
 License:    MIT
@@ -108,7 +108,6 @@ touch -r ${f}{,_} && mv -f ${f}{_,}
 done
 
 %define ncurses_options \\\
---with-abi-version=5 \\\
 --with-shared --without-ada --with-ospeed=unsigned \\\
 --enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
 --with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo \\\
