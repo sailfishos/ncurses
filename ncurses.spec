@@ -5,7 +5,6 @@ Name:       ncurses
 Summary:    Ncurses support utilities
 Version:    6.1+git2
 Release:    1
-Group:      System/Base
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
 Source0:    %{name}-6.1.tar.gz
@@ -27,7 +26,6 @@ tool captoinfo.
 
 %package libs
 Summary:    Ncurses libraries
-Group:      System/Libraries
 Requires:   %{name}-base = %{version}-%{release}
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -43,7 +41,6 @@ This package contains the ncurses libraries.
 
 %package term
 Summary:    Terminal descriptions
-Group:      System/Base
 Requires:   %{name}-base = %{version}-%{release}
 
 %description term
@@ -53,7 +50,6 @@ the ncurses-base package.
 
 %package base
 Summary:    Descriptions of common terminals
-Group:      System/Base
 Conflicts:   %{name} < 5.6-13
 
 %description base
@@ -63,7 +59,6 @@ descriptions are included in the ncurses-term package.
 
 %package static
 Summary:    Static libraries for the ncurses library
-Group:      Development/Libraries
 Requires:   %{name}-devel = %{version}-%{release}
 
 %description static
@@ -72,7 +67,6 @@ The ncurses-static package includes static libraries of the ncurses library.
 
 %package devel
 Summary:    Development files for the ncurses library
-Group:      Development/Libraries
 Requires:   %{name}-libs = %{version}-%{release}
 
 %description devel
@@ -85,7 +79,6 @@ which will use ncurses.
 
 %package doc
 Summary:   Documentation for %{name}
-Group:     Documentation
 Requires:  %{name} = %{version}-%{release}
 Obsoletes: %{name}-docs
 
