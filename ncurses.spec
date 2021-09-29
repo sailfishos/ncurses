@@ -1,11 +1,11 @@
 Name:       ncurses
 
 %define keepstatic 1
+%bcond_with ncurses_abi5
 
 Summary:    Ncurses support utilities
-Version:    6.1+git2
+Version:    6.1+git3
 Release:    1
-Group:      System/Base
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
 Source0:    %{name}-6.1.tar.gz
@@ -27,7 +27,6 @@ tool captoinfo.
 
 %package libs
 Summary:    Ncurses libraries
-Group:      System/Libraries
 Requires:   %{name}-base = %{version}-%{release}
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -43,7 +42,6 @@ This package contains the ncurses libraries.
 
 %package term
 Summary:    Terminal descriptions
-Group:      System/Base
 Requires:   %{name}-base = %{version}-%{release}
 
 %description term
@@ -53,7 +51,6 @@ the ncurses-base package.
 
 %package base
 Summary:    Descriptions of common terminals
-Group:      System/Base
 Conflicts:   %{name} < 5.6-13
 
 %description base
@@ -63,7 +60,6 @@ descriptions are included in the ncurses-term package.
 
 %package static
 Summary:    Static libraries for the ncurses library
-Group:      Development/Libraries
 Requires:   %{name}-devel = %{version}-%{release}
 
 %description static
@@ -72,7 +68,6 @@ The ncurses-static package includes static libraries of the ncurses library.
 
 %package devel
 Summary:    Development files for the ncurses library
-Group:      Development/Libraries
 Requires:   %{name}-libs = %{version}-%{release}
 
 %description devel
@@ -85,16 +80,30 @@ which will use ncurses.
 
 %package doc
 Summary:   Documentation for %{name}
-Group:     Documentation
 Requires:  %{name} = %{version}-%{release}
 Obsoletes: %{name}-docs
 
 %description doc
 Man pages for %{name}.
 
+%if %{with ncurses_abi5}
+%package libs5
+Summary:    Ncurses libraries
+Requires:   %{name}-base = %{version}-%{release}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+%description libs5
+The curses library routines are a terminal-independent method of
+updating character screens with reasonable optimization.  The ncurses
+(new curses) library is a freely distributable replacement for the
+discontinued 4.4 BSD classic curses library.
+
+This package contains the ABI version 5 of the ncurses libraries for compatibility.
+%endif
 
 %prep
-%setup -q -n %{name}-6.1
+%autosetup -n %{name}-6.1
 
 %build
 
@@ -108,35 +117,49 @@ touch -r ${f}{,_} && mv -f ${f}{_,}
 done
 
 %define ncurses_options \\\
---with-abi-version=5 \\\
---with-shared --without-ada --with-ospeed=unsigned \\\
---enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
---with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo \\\
---enable-overwrite \\\
---enable-pc-files \\\
---with-pkg-config-libdir=%{_libdir}/pkgconfig \\\
---with-termlib=tinfo \\\
---with-chtype=long
+        --with-shared --without-ada --with-ospeed=unsigned \\\
+        --enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
+        --with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo \\\
+        --enable-overwrite \\\
+        --enable-pc-files \\\
+        --with-pkg-config-libdir=%{_libdir}/pkgconfig \\\
+        --with-ticlib=tic \\\
+        --with-termlib=tinfo
+%define abi5_options --with-chtype=long
 
-mkdir -p narrowc widec
-cd narrowc
-ln -sf ../configure .
-%configure %{ncurses_options} --with-ticlib
-make %{?_smp_mflags} libs
-make %{?_smp_mflags} -C progs
+for abi in 6 %{?with_ncurses_abi5: 5}; do
+    for char in narrowc widec; do
+        mkdir $char$abi
+        pushd $char$abi
+        ln -s %{_builddir}/%{buildsubdir}/configure .
 
-cd ../widec
-ln -sf ../configure .
-%configure %{ncurses_options} --enable-widec --without-progs
-make %{?_smp_mflags} libs
-cd ..
+        [ $abi = 6 ] && [ $char = widec ] && progs=yes || progs=no
+
+        %configure $(
+            echo %ncurses_options --with-abi-version=$abi
+            [ $abi = 5 ] && echo %{abi5_options}
+            [ $char = widec ] && echo --enable-widec
+            [ $progs = yes ] || echo --without-progs
+        )
+        %make_build libs
+        [ $progs = yes ] && %make_build -C progs
+
+        popd
+    done
+done
 
 %install
-rm -rf %{buildroot}
 
-make -C narrowc DESTDIR=$RPM_BUILD_ROOT install.{libs,progs,data}
-rm -f $RPM_BUILD_ROOT%{_libdir}/libtinfo.*
-make -C widec DESTDIR=$RPM_BUILD_ROOT install.{libs,includes,man}
+%if %{with ncurses_abi5}
+%{__make} -C narrowc5 DESTDIR=$RPM_BUILD_ROOT install.libs
+rm ${RPM_BUILD_ROOT}%{_libdir}/lib{tic,tinfo}.so.5*
+%{__make} -C widec5 DESTDIR=$RPM_BUILD_ROOT install.libs
+rm -f $RPM_BUILD_ROOT%{_bindir}/ncurses*5-config
+%endif
+
+%{__make} -C narrowc6 DESTDIR=$RPM_BUILD_ROOT install.libs
+rm -f $RPM_BUILD_ROOT%{_libdir}/libtinfo.6*
+%{__make} -C widec6 DESTDIR=$RPM_BUILD_ROOT install.{libs,progs,data,includes,man}
 
 chmod 755 ${RPM_BUILD_ROOT}%{_libdir}/lib*.so.*.*
 chmod 644 ${RPM_BUILD_ROOT}%{_libdir}/lib*.a
@@ -205,7 +228,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 
 %files libs
 %defattr(-,root,root,-)
-%{_libdir}/lib*.so.*
+%{_libdir}/lib*.so.6*
+
+%if %{with ncurses_abi5}
+%files libs5
+%{_libdir}/lib*.so.5*
+%endif
 
 %files term -f terms.term
 %defattr(-,root,root,-)
