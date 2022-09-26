@@ -4,11 +4,11 @@ Name:       ncurses
 %bcond_with ncurses_abi5
 
 Summary:    Ncurses support utilities
-Version:    6.1+git3
+Version:    6.3+git1
 Release:    1
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
-Source0:    %{name}-6.1.tar.gz
+Source0:    %{name}-6.3.tar.gz
 Source101:  ncurses-rpmlintrc
 Requires:   %{name}-libs
 Provides:   console-tools
@@ -103,7 +103,7 @@ This package contains the ABI version 5 of the ncurses libraries for compatibili
 %endif
 
 %prep
-%autosetup -n %{name}-6.1
+%autosetup -n %{name}-6.3
 
 %build
 
@@ -158,7 +158,7 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/ncurses*5-config
 %endif
 
 %{__make} -C narrowc6 DESTDIR=$RPM_BUILD_ROOT install.libs
-rm -f $RPM_BUILD_ROOT%{_libdir}/libtinfo.6*
+rm -f $RPM_BUILD_ROOT%{_libdir}/lib{tic,tinfo}.so.6*
 %{__make} -C widec6 DESTDIR=$RPM_BUILD_ROOT install.{libs,progs,data,includes,man}
 
 chmod 755 ${RPM_BUILD_ROOT}%{_libdir}/lib*.so.*.*
