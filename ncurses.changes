@@ -1,3 +1,6 @@
+* Mon Sep 26 2022 Pekka Vuorela <pekka.vuorela@jolla.com> - 6.2+git1
+- [ncurses] Update to 6.2. JB#55136
+
 * Mon Sep  6 2021 Björn Bidar <bjorn.bidar@jolla.com> - 6.1+git3
 - [ncurses] Enable ABI6 and move ABI5 libs to a separte package. JB#55230
 
