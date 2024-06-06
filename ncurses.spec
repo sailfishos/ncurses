@@ -4,11 +4,11 @@ Name:       ncurses
 %bcond_with ncurses_abi5
 
 Summary:    Ncurses support utilities
-Version:    6.3+git1
+Version:    6.5+git1
 Release:    1
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
-Source0:    %{name}-6.3.tar.gz
+Source0:    %{name}-6.5.tar.gz
 Source101:  ncurses-rpmlintrc
 Requires:   %{name}-libs
 Provides:   console-tools
@@ -103,7 +103,7 @@ This package contains the ABI version 5 of the ncurses libraries for compatibili
 %endif
 
 %prep
-%autosetup -n %{name}-6.3
+%autosetup -n %{name}-6.5
 
 %build
 
@@ -138,7 +138,7 @@ for abi in 6 %{?with_ncurses_abi5: 5}; do
         %configure $(
             echo %ncurses_options --with-abi-version=$abi
             [ $abi = 5 ] && echo %{abi5_options}
-            [ $char = widec ] && echo --enable-widec
+            [ $char = widec ] && echo --enable-widec || echo --disable-widec
             [ $progs = yes ] || echo --without-progs
         )
         %make_build libs
@@ -170,15 +170,15 @@ baseterms=
 
 # prepare -base and -term file lists
 for termname in \
-ansi dumb linux vt100 vt100-nav vt102 vt220 vt52 \
-Eterm\* aterm cons25 cygwin eterm\* gnome gnome-256color hurd jfbterm \
-konsole konsole-256color mach\* mlterm mrxvt nsterm putty\* pcansi \
-rxvt rxvt-\* screen screen-\* screen.\* sun teraterm teraterm2.3 \
-wsvt25\* xfce xterm xterm-\*
+    alacritty ansi dumb foot\* linux vt100 vt100-nav vt102 vt220 vt52 \
+    Eterm\* aterm bterm cons25 cygwin eterm\* gnome gnome-256color hurd jfbterm \
+    kitty konsole konsole-256color mach\* mlterm mrxvt nsterm putty{,-256color} pcansi \
+    rxvt{,-\*} screen{,-\*color,.[^mlp]\*,.linux,.mlterm\*,.putty{,-256color},.mrxvt} \
+    st{,-\*color} sun teraterm teraterm2.3 tmux{,-\*} vte vte-256color vwmterm \
+    wsvt25\* xfce xterm xterm-\*
 do
     for i in $RPM_BUILD_ROOT%{_datadir}/terminfo/?/$termname; do
-        inum=$(ls -i $i | cut -d' ' -f1)
-        for t in $(find $RPM_BUILD_ROOT%{_datadir}/terminfo -inum $inum); do
+        for t in $(find $RPM_BUILD_ROOT%{_datadir}/terminfo -samefile $i); do
             baseterms="$baseterms $(basename $t)"
         done
     done
@@ -223,11 +223,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 %postun libs -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %{_bindir}/[cirt]*
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so.6*
 
 %if %{with ncurses_abi5}
@@ -236,21 +234,17 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 %endif
 
 %files term -f terms.term
-%defattr(-,root,root,-)
 
 %files base -f terms.base
-%defattr(-,root,root,-)
 %license COPYING
 %dir %{_sysconfdir}/terminfo
 %{_datadir}/tabset
 %dir %{_datadir}/terminfo
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/lib*.a
 
 %files devel
-%defattr(-,root,root,-)
 %{_bindir}/ncurses*-config
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
@@ -261,5 +255,4 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 %{_includedir}/*.h
 
 %files doc
-%defattr(-,root,root,-)
 %{_mandir}/man*/*.*
