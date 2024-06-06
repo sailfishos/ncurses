@@ -205,7 +205,11 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libcurses{,w}.so
 echo "INPUT(-lncurses)" > $RPM_BUILD_ROOT%{_libdir}/libcurses.so
 echo "INPUT(-lncursesw)" > $RPM_BUILD_ROOT%{_libdir}/libcursesw.so
 
+%if 0
+#  Avoid linker script libterminfo.so as bash/readline configure can not handle
+# this. It will falsely detect libtinfo as termcap.
 echo "INPUT(-ltinfo)" > $RPM_BUILD_ROOT%{_libdir}/libtermcap.so
+%endif
 
 # don't require -ltinfo when linking with --no-add-needed
 for l in $RPM_BUILD_ROOT%{_libdir}/libncurses{,w}.so; do
