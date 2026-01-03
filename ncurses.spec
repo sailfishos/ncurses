@@ -4,11 +4,11 @@ Name:       ncurses
 %bcond_with ncurses_abi5
 
 Summary:    Ncurses support utilities
-Version:    6.5+git1
+Version:    6.6+git1
 Release:    1
 License:    MIT
 URL:        http://invisible-island.net/ncurses/ncurses.html
-Source0:    %{name}-6.5.tar.gz
+Source0:    %{name}-6.6.tar.gz
 Source101:  ncurses-rpmlintrc
 Requires:   %{name}-libs
 Provides:   console-tools
@@ -103,18 +103,13 @@ This package contains the ABI version 5 of the ncurses libraries for compatibili
 %endif
 
 %prep
-%autosetup -n %{name}-6.5
+%autosetup -n %{name}-6.6
 
 %build
 
 # this will be in documentation, drop executable bits
 cp -p install-sh test
 chmod 644 test/*
-
-for f in ANNOUNCE; do
-iconv -f iso8859-1 -t utf8 -o ${f}{_,} &&
-touch -r ${f}{,_} && mv -f ${f}{_,}
-done
 
 %define ncurses_options \\\
         --with-shared --without-ada --with-ospeed=unsigned \\\
@@ -131,7 +126,7 @@ for abi in 6 %{?with_ncurses_abi5: 5}; do
     for char in narrowc widec; do
         mkdir $char$abi
         pushd $char$abi
-        ln -s %{_builddir}/%{buildsubdir}/configure .
+        ln -s ../configure .
 
         [ $abi = 6 ] && [ $char = widec ] && progs=yes || progs=no
 
@@ -214,7 +209,7 @@ rm -f $l
 echo "INPUT($soname -ltinfo)" > $l
 done
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/terminfo
+rm -f $RPM_BUILD_ROOT{%{_libdir},/usr/lib}/terminfo
 rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/{*_g,ncurses++*}.pc
 
 

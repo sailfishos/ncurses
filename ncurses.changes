@@ -1,3 +1,6 @@
+* Sat Jan 03 2026 Matti Lehtimäki <matti.lehtimaki@jolla.com> - 6.6+git1
+- [ncurses] Update to 6.6. Fixes JB#63789
+
 * Thu Jun 06 2024 Matti Lehtimäki <matti.lehtimaki@jolla.com> - 6.5+git1
 - [ncurses] Update to 6.5. Fixes JB#62181
 
